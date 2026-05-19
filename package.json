@@ -1,0 +1,10 @@
+{
+  "name": "is-gunlugu",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Kişisel iş günlüğü PWA",
+  "scripts": {
+    "dev": "npx --yes serve . -l 3000",
+    "start": "npm run dev"
+  }
+}

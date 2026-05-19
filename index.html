@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f1419" id="metaTheme" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="İş Günlüğü" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <link rel="icon" href="icons/icon-192.png" />
+  <link rel="stylesheet" href="css/app.css" />
+  <title>İş Günlüğü</title>
+</head>
+<body>
+  <div class="preview-hint" aria-hidden="true">
+    <p>iPhone önizleme — gerçek telefonda tam ekran açılır</p>
+  </div>
+
+  <div class="phone-shell" id="phoneShell">
+    <div class="phone-bezel">
+      <div class="phone-notch"></div>
+      <div class="phone-screen">
+        <main class="app" id="app">
+          <header class="app-header">
+            <div class="header-row">
+              <div>
+                <h1>İş Günlüğü</h1>
+                <p class="subtitle">Hızlı kayıt · Haftalık özet</p>
+              </div>
+              <button type="button" class="icon-btn" id="themeToggle" aria-label="Tema değiştir" title="Açık / koyu tema">☀️</button>
+            </div>
+          </header>
+
+          <nav class="tabs" role="tablist">
+            <button type="button" class="tab active" data-tab="add" role="tab" aria-selected="true">Kayıt</button>
+            <button type="button" class="tab" data-tab="list" role="tab" aria-selected="false">Liste</button>
+            <button type="button" class="tab" data-tab="week" role="tab" aria-selected="false">Hafta</button>
+          </nav>
+
+          <section class="panel active" id="panel-add" role="tabpanel">
+            <p class="edit-banner" id="editBanner" hidden>Düzenleme modu</p>
+            <form id="entryForm" class="entry-form">
+              <input type="hidden" id="editingId" value="" />
+
+              <label class="field">
+                <span>Tarih</span>
+                <div class="date-row">
+                  <input type="date" id="entryDate" required />
+                  <button type="button" class="chip chip-sm" id="btnToday">Bugün</button>
+                </div>
+              </label>
+
+              <div class="week-block compact">
+                <h2 class="block-title">Hızlı rotalar <small>(sadece adres)</small></h2>
+                <div class="template-chips" id="templateChips"></div>
+                <p class="hint-text" id="templateEmpty">Henüz şablon yok. Sadece Pick Up ve Drop Off kaydedilir — müşteri adı her seferinde siz yazarsınız.</p>
+                <button type="button" class="btn btn-ghost btn-sm" id="btnSaveTemplate">Adres şablonu kaydet</button>
+              </div>
+
+              <label class="field">
+                <span>Customer Name</span>
+                <input type="text" id="entryCustomer" required list="listCustomers" autocomplete="off" placeholder="Müşteri adı" />
+                <datalist id="listCustomers"></datalist>
+              </label>
+
+              <label class="field">
+                <span>Pick Up Adresi <small>(PO)</small></span>
+                <input type="text" id="entryPickUp" required list="listPickUps" autocomplete="off" placeholder="Alış adresi" />
+                <datalist id="listPickUps"></datalist>
+              </label>
+
+              <label class="field">
+                <span>Drop Off Adresi <small>(DO)</small></span>
+                <input type="text" id="entryDropOff" required list="listDropOffs" autocomplete="off" placeholder="Bırakış adresi" />
+                <datalist id="listDropOffs"></datalist>
+              </label>
+
+              <label class="field">
+                <span>Not <small>(isteğe bağlı)</small></span>
+                <textarea id="entryNote" rows="2" placeholder="Ek bilgi…"></textarea>
+              </label>
+
+              <label class="check-row">
+                <input type="checkbox" id="oneMore" checked />
+                <span>Kayıttan sonra bir tane daha (tarih kalsın)</span>
+              </label>
+
+              <button type="submit" class="btn btn-primary" id="btnSubmit">Kaydet</button>
+              <button type="button" class="btn btn-secondary" id="btnCancelEdit" hidden>İptal</button>
+            </form>
+          </section>
+
+          <section class="panel" id="panel-list" role="tabpanel" hidden>
+            <label class="field search-field">
+              <span>Ara</span>
+              <input type="search" id="listSearch" placeholder="Müşteri, PO, DO, not…" autocomplete="off" />
+            </label>
+            <div class="filter-row">
+              <button type="button" class="chip active" data-filter="today">Bugün</button>
+              <button type="button" class="chip" data-filter="week">Hafta</button>
+              <button type="button" class="chip" data-filter="all">Tümü</button>
+            </div>
+            <div class="week-nav" id="listWeekNav" hidden>
+              <button type="button" class="week-btn" id="listWeekPrev" aria-label="Önceki hafta">‹</button>
+              <span class="week-label" id="listWeekLabel"></span>
+              <button type="button" class="week-btn" id="listWeekNext" aria-label="Sonraki hafta">›</button>
+              <button type="button" class="chip chip-sm" id="listWeekToday">Bu hafta</button>
+            </div>
+            <ul class="entry-list" id="entryList"></ul>
+            <p class="empty-state" id="listEmpty" hidden>Kayıt yok.</p>
+          </section>
+
+          <section class="panel" id="panel-week" role="tabpanel" hidden>
+            <div class="week-nav">
+              <button type="button" class="week-btn" id="weekPrev" aria-label="Önceki hafta">‹</button>
+              <span class="week-label" id="weekRange"></span>
+              <button type="button" class="week-btn" id="weekNext" aria-label="Sonraki hafta">›</button>
+            </div>
+            <button type="button" class="chip chip-sm week-today-btn" id="weekToday">Bu haftaya dön</button>
+            <p class="week-stats" id="weekJobCount"></p>
+
+            <div class="week-block">
+              <h2 class="block-title">Haftalık notum</h2>
+              <textarea id="weekNote" class="week-note" rows="3" placeholder="Örn: Paramı aldım, bu hafta 900$ çalıştım…"></textarea>
+            </div>
+
+            <div class="week-block">
+              <h2 class="block-title">Giderler <span class="expense-total" id="expenseTotal"></span></h2>
+              <ul class="expense-list" id="expenseList"></ul>
+              <p class="empty-state" id="expenseEmpty" hidden>Bu hafta gider yok.</p>
+              <form id="expenseForm" class="expense-form">
+                <label class="field">
+                  <span>Tarih</span>
+                  <input type="date" id="expenseDate" required />
+                </label>
+                <label class="field">
+                  <span>Gider</span>
+                  <input type="text" id="expenseLabel" value="Yakıt" required placeholder="Yakıt, otopark…" />
+                </label>
+                <label class="field">
+                  <span>Tutar <small>(isteğe bağlı)</small></span>
+                  <input type="text" id="expenseAmount" inputmode="decimal" placeholder="$" />
+                </label>
+                <button type="submit" class="btn btn-secondary btn-sm">Gider ekle</button>
+              </form>
+            </div>
+
+            <div class="week-block">
+              <h2 class="block-title">Kopyalanacak özet</h2>
+              <p class="export-hint">Yukarıdaki oklarla seçtiğiniz haftanın metni</p>
+              <textarea class="export-preview" id="exportPreview" readonly rows="8"></textarea>
+              <div class="btn-row">
+                <button type="button" class="btn btn-secondary" id="btnCopy">Kopyala</button>
+                <button type="button" class="btn btn-primary" id="btnShare">Paylaş</button>
+              </div>
+            </div>
+
+            <div class="week-block">
+              <h2 class="block-title">Veri yedekleme</h2>
+              <p class="hint-text">Tüm kayıtlar cihazınızda kalır. Yedek alırsanız telefon değişince geri yükleyebilirsiniz.</p>
+              <div class="btn-row">
+                <button type="button" class="btn btn-secondary btn-sm" id="btnExportBackup">Yedek indir</button>
+                <label class="btn btn-secondary btn-sm file-label">
+                  Yedek yükle
+                  <input type="file" id="backupFile" accept=".json,application/json" hidden />
+                </label>
+              </div>
+            </div>
+
+            <p class="toast" id="toast" hidden></p>
+          </section>
+        </main>
+      </div>
+      <div class="phone-home-bar"></div>
+    </div>
+  </div>
+
+  <script src="js/dates.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
