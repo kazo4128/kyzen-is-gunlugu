@@ -1,4 +1,4 @@
-const CACHE = "is-gunlugu-v9";
+const CACHE = "is-gunlugu-v10";
 
 self.addEventListener("install", (e) => {
   self.skipWaiting();
