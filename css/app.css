@@ -30,21 +30,14 @@ body {
   color: var(--text);
 }
 
-/* ——— Gerçek iPhone / dar ekran: tam ekran, çerçeve yok ——— */
-body.is-device {
-  display: block;
-  min-height: 100dvh;
-  padding: 0;
-  background: var(--bg);
+/* ——— Varsayılan: telefon / tam ekran (JS gerekmez) ——— */
+.preview-hint {
+  display: none;
 }
 
-body.is-device .preview-hint {
-  display: none !important;
-}
-
-body.is-device .phone-shell,
-body.is-device .phone-bezel,
-body.is-device .phone-screen {
+.phone-shell,
+.phone-bezel,
+.phone-screen {
   width: 100%;
   max-width: none;
   min-height: 100dvh;
@@ -56,31 +49,87 @@ body.is-device .phone-screen {
   box-shadow: none;
 }
 
-body.is-device .phone-notch,
-body.is-device .phone-home-bar {
+.phone-bezel {
+  width: 100%;
+}
+
+.phone-notch,
+.phone-home-bar {
   display: none !important;
 }
 
-body.is-device .phone-screen {
+.phone-screen {
+  width: 100%;
+  height: auto;
+  max-height: none;
   overflow: visible;
+  border-radius: 0;
 }
 
-body.is-device .app {
+.app {
   min-height: 100dvh;
   height: auto;
   padding-top: max(12px, var(--safe-top));
   padding-bottom: max(16px, var(--safe-bottom));
 }
 
-/* ——— Masaüstü: iPhone önizleme ——— */
-body.is-preview {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  padding: 24px 16px;
-  background: radial-gradient(ellipse at 50% 0%, #1e2a3a 0%, #0a0d12 55%);
+/* ——— Masaüstü: iPhone çerçeve önizleme ——— */
+@media (min-width: 501px) {
+  body.is-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 24px 16px;
+    background: radial-gradient(ellipse at 50% 0%, #1e2a3a 0%, #0a0d12 55%);
+  }
+
+  body.is-preview .preview-hint {
+    display: block;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+
+  body.is-preview .phone-shell {
+    flex-shrink: 0;
+    width: auto;
+    min-height: 0;
+  }
+
+  body.is-preview .phone-bezel {
+    position: relative;
+    width: calc(var(--phone-w) + 24px);
+    padding: 12px;
+    background: linear-gradient(145deg, #2a2a2e 0%, #1c1c1e 50%, #0d0d0f 100%);
+    border-radius: 52px;
+    box-shadow:
+      0 0 0 2px #3a3a3e,
+      0 24px 80px rgba(0, 0, 0, 0.65),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+
+  body.is-preview .phone-notch {
+    display: block !important;
+  }
+
+  body.is-preview .phone-screen {
+    width: var(--phone-w);
+    height: var(--phone-h);
+    max-height: min(var(--phone-h), calc(100vh - 120px));
+    overflow: hidden;
+    border-radius: 40px;
+  }
+
+  body.is-preview .phone-home-bar {
+    display: block !important;
+  }
+
+  body.is-preview .app {
+    height: 100%;
+    min-height: 0;
+    padding: 44px 16px 20px;
+  }
 }
 
 .preview-hint {
@@ -92,22 +141,6 @@ body.is-preview {
   margin: 0;
   font-size: 0.85rem;
   color: var(--muted);
-}
-
-.phone-shell {
-  flex-shrink: 0;
-}
-
-.phone-bezel {
-  position: relative;
-  width: calc(var(--phone-w) + 24px);
-  padding: 12px;
-  background: linear-gradient(145deg, #2a2a2e 0%, #1c1c1e 50%, #0d0d0f 100%);
-  border-radius: 52px;
-  box-shadow:
-    0 0 0 2px #3a3a3e,
-    0 24px 80px rgba(0, 0, 0, 0.65),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .phone-notch {
@@ -123,16 +156,6 @@ body.is-preview {
   pointer-events: none;
 }
 
-.phone-screen {
-  width: var(--phone-w);
-  height: var(--phone-h);
-  max-height: min(var(--phone-h), calc(100vh - 120px));
-  overflow: hidden;
-  border-radius: 40px;
-  background: var(--bg);
-  position: relative;
-}
-
 .phone-home-bar {
   width: 134px;
   height: 5px;
@@ -143,11 +166,9 @@ body.is-preview {
 
 /* ——— Uygulama ——— */
 .app {
-  height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
-  padding: 44px 16px 20px;
   background: var(--bg);
 }
 

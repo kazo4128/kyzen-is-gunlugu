@@ -1,14 +1,7 @@
 (function () {
   function applyLayoutMode() {
-    const isStandalone =
-      window.matchMedia("(display-mode: standalone)").matches ||
-      window.navigator.standalone === true;
-    const isNarrow = window.matchMedia("(max-width: 500px)").matches;
-    const isTouch =
-      window.matchMedia("(pointer: coarse)").matches || navigator.maxTouchPoints > 0;
-    const useDevice = isStandalone || isNarrow || isTouch;
-    document.body.classList.toggle("is-device", useDevice);
-    document.body.classList.toggle("is-preview", !useDevice);
+    const isWide = window.matchMedia("(min-width: 501px)").matches;
+    document.body.classList.toggle("is-preview", isWide);
   }
 
   applyLayoutMode();
@@ -612,7 +605,8 @@
   });
 
   if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("sw.js").catch(() => {});
+    const swUrl = new URL("sw.js", document.baseURI).href;
+    navigator.serviceWorker.register(swUrl).catch(() => {});
   }
 
   function bootstrapRecents() {
