@@ -30,27 +30,44 @@ body {
   color: var(--text);
 }
 
-/* ——— Gerçek iPhone: tam ekran, çerçeve yok ——— */
-body.is-device .preview-hint,
-body.is-device .phone-shell {
-  display: contents;
+/* ——— Gerçek iPhone / dar ekran: tam ekran, çerçeve yok ——— */
+body.is-device {
+  display: block;
+  min-height: 100dvh;
+  padding: 0;
+  background: var(--bg);
 }
 
+body.is-device .preview-hint {
+  display: none !important;
+}
+
+body.is-device .phone-shell,
 body.is-device .phone-bezel,
+body.is-device .phone-screen {
+  width: 100%;
+  max-width: none;
+  min-height: 100dvh;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  border-radius: 0;
+  box-shadow: none;
+}
+
 body.is-device .phone-notch,
 body.is-device .phone-home-bar {
-  display: none;
+  display: none !important;
 }
 
 body.is-device .phone-screen {
-  min-height: 100dvh;
-  max-height: none;
-  border-radius: 0;
   overflow: visible;
 }
 
 body.is-device .app {
   min-height: 100dvh;
+  height: auto;
   padding-top: max(12px, var(--safe-top));
   padding-bottom: max(16px, var(--safe-bottom));
 }

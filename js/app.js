@@ -4,7 +4,9 @@
       window.matchMedia("(display-mode: standalone)").matches ||
       window.navigator.standalone === true;
     const isNarrow = window.matchMedia("(max-width: 500px)").matches;
-    const useDevice = isStandalone || isNarrow;
+    const isTouch =
+      window.matchMedia("(pointer: coarse)").matches || navigator.maxTouchPoints > 0;
+    const useDevice = isStandalone || isNarrow || isTouch;
     document.body.classList.toggle("is-device", useDevice);
     document.body.classList.toggle("is-preview", !useDevice);
   }

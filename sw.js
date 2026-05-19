@@ -1,4 +1,4 @@
-const CACHE = "is-gunlugu-v7";
+const CACHE = "is-gunlugu-v8";
 const ASSETS = [
   "./",
   "./index.html",
